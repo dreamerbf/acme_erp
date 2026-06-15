@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ACME ERP — Portal de Acceso</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0a0e1a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+      padding: 20px;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .logo-icon {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #f97316, #ea580c);
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 14px;
+    }
+
+    .logo h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #f1f5f9;
+    }
+
+    .logo p {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .card {
+      background: #111827;
+      border: 1px solid #1e293b;
+      border-radius: 16px;
+      padding: 32px;
+    }
+
+    .card h2 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #94a3b8;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 12px;
+      color: #64748b;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .field input {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 12px 14px;
+      color: #f1f5f9;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .field input:focus {
+      border-color: #f97316;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, #f97316, #ea580c);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: opacity 0.2s;
+    }
+
+    .btn:hover { opacity: 0.9; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .alert {
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-top: 16px;
+      display: none;
+    }
+
+    .alert.error { background: #1f0a0a; border: 1px solid #7f1d1d; color: #fca5a5; }
+    .alert.success { background: #0a1f0f; border: 1px solid #14532d; color: #86efac; }
+
+    /* Dashboard */
+    .dashboard { display: none; }
+
+    .dashboard .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .dashboard .header h2 { font-size: 18px; color: #f1f5f9; }
+
+    .btn-sm {
+      padding: 8px 16px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      color: #94a3b8;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .btn-sm:hover { background: #334155; }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .stat {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .stat .label {
+      font-size: 11px;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 6px;
+    }
+
+    .stat .value {
+      font-size: 13px;
+      color: #f1f5f9;
+      font-weight: 500;
+      word-break: break-all;
+    }
+
+    .stat .dot {
+      width: 8px; height: 8px;
+      background: #22c55e;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 6px;
+    }
+
+    .actions { display: flex; gap: 10px; flex-direction: column; }
+
+    .action-btn {
+      padding: 12px 16px;
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      color: #94a3b8;
+      font-size: 13px;
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 0.2s;
+    }
+
+    .action-btn:hover { border-color: #f97316; color: #f1f5f9; }
+
+    .log-box {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 14px;
+      margin-top: 16px;
+      font-size: 12px;
+      color: #64748b;
+      font-family: monospace;
+      max-height: 200px;
+      overflow-y: auto;
+      display: none;
+    }
+
+    .log-box .log-item { color: #86efac; margin-bottom: 4px; }
+
+    .token-box {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-top: 16px;
+      font-size: 11px;
+      color: #f97316;
+      font-family: monospace;
+      word-break: break-all;
+      display: none;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 11px;
+      color: #334155;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- LOGO -->
+  <div class="logo">
+    <div class="logo-icon">🔧</div>
+    <h1>ACME ERP</h1>
+    <p>Sistema de Gestión Empresarial</p>
+  </div>
+
+  <!-- LOGIN -->
+  <div id="loginView" class="card">
+    <h2>Acceso al Sistema</h2>
+
+    <div class="field">
+      <label>Usuario</label>
+      <input type="text" id="username" placeholder="admin" />
+    </div>
+
+    <div class="field">
+      <label>Contraseña</label>
+      <input type="password" id="password" placeholder="••••••••" />
+    </div>
+
+    <button class="btn" id="loginBtn" onclick="login()">Iniciar Sesión</button>
+
+    <div class="alert" id="alert"></div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboardView" class="dashboard card">
+    <div class="header">
+      <h2>Panel de Control</h2>
+      <button class="btn-sm" onclick="logout()">Cerrar sesión</button>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat">
+        <div class="label">Estado RDS</div>
+        <div class="value" id="statRDS"><span class="dot"></span>Conectado</div>
+      </div>
+      <div class="stat">
+        <div class="label">Usuario</div>
+        <div class="value" id="statUser">—</div>
+      </div>
+      <div class="stat">
+        <div class="label">Hora Servidor</div>
+        <div class="value" id="statHora">—</div>
+      </div>
+      <div class="stat">
+        <div class="label">PostgreSQL</div>
+        <div class="value" id="statPG">—</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="action-btn" onclick="verToken()">🔑 Ver Token JWT activo</button>
+      <button class="action-btn" onclick="initDB()">🗄️ Inicializar tabla en RDS</button>
+      <button class="action-btn" onclick="verLogs()">📋 Ver logs desde RDS</button>
+      <button class="action-btn" onclick="checkHealth()">🩺 Health Check del servicio</button>
+    </div>
+
+    <div class="token-box" id="tokenBox"></div>
+    <div class="log-box" id="logBox"></div>
+  </div>
+
+  <div class="footer">ACME Limitada © 2024 — CI3051 Ciberseguridad en la Nube</div>
+</div>
+
+<script>
+  let TOKEN = '';
+
+  function showAlert(msg, type) {
+    const el = document.getElementById('alert');
+    el.textContent = msg;
+    el.className = `alert ${type}`;
+    el.style.display = 'block';
+  }
+
+  async function login() {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const btn = document.getElementById('loginBtn');
+
+    if (!username || !password) {
+      showAlert('Completa usuario y contraseña.', 'error');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Verificando...';
+
+    try {
+      const res = await fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        showAlert(data.error || 'Error de autenticación.', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Iniciar Sesión';
+        return;
+      }
+
+      TOKEN = data.token;
+      showDashboard(data.usuario);
+
+    } catch (err) {
+      showAlert('Error de conexión con el servidor.', 'error');
+      btn.disabled = false;
+      btn.textContent = 'Iniciar Sesión';
+    }
+  }
+
+  async function showDashboard(usuario) {
+    document.getElementById('loginView').style.display = 'none';
+    document.getElementById('dashboardView').style.display = 'block';
+    document.getElementById('statUser').textContent = usuario;
+
+    try {
+      const res = await fetch('/dashboard', {
+        headers: { 'Authorization': `Bearer ${TOKEN}` }
+      });
+      const data = await res.json();
+      document.getElementById('statHora').textContent =
+        new Date(data.hora_servidor).toLocaleTimeString('es-CL');
+      document.getElementById('statPG').textContent =
+        data.version_postgresql?.split(' ')[1] || 'OK';
+    } catch {
+      document.getElementById('statRDS').innerHTML = '🔴 Error';
+    }
+  }
+
+  function logout() {
+    TOKEN = '';
+    document.getElementById('loginView').style.display = 'block';
+    document.getElementById('dashboardView').style.display = 'none';
+    document.getElementById('loginBtn').disabled = false;
+    document.getElementById('loginBtn').textContent = 'Iniciar Sesión';
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('tokenBox').style.display = 'none';
+    document.getElementById('logBox').style.display = 'none';
+  }
+
+  function verToken() {
+    const box = document.getElementById('tokenBox');
+    box.style.display = box.style.display === 'none' ? 'block' : 'none';
+    box.textContent = TOKEN;
+  }
+
+  async function initDB() {
+    const res = await fetch('/init-db', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${TOKEN}` }
+    });
+    const data = await res.json();
+    alert(data.mensaje || data.error);
+  }
+
+  async function verLogs() {
+    const box = document.getElementById('logBox');
+    const res = await fetch('/logs', {
+      headers: { 'Authorization': `Bearer ${TOKEN}` }
+    });
+    const data = await res.json();
+    box.style.display = 'block';
+    box.innerHTML = data.logs?.map(l =>
+      `<div class="log-item">[${new Date(l.fecha).toLocaleString('es-CL')}] ${l.evento} — ${l.usuario}</div>`
+    ).join('') || '<div>Sin logs aún.</div>';
+  }
+
+  async function checkHealth() {
+    const res = await fetch('/health');
+    const data = await res.json();
+    alert(`Estado: ${data.estado}\nServicio: ${data.servicio}\nTimestamp: ${data.timestamp}`);
+  }
+
+  // Enter para login
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') login();
+  });
+</script>
+</body>
+</html>
